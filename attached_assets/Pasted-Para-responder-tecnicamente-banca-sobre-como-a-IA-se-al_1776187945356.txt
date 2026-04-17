@@ -1,0 +1,31 @@
+Para responder tecnicamente à banca sobre "como a IA se alimenta", você deve explicar a arquitetura de processamento que transforma uma foto analógica em um dado digital estruturado. No contexto do Grand Prix, a banca quer ver a viabilidade técnica: eles precisam acreditar que a sua solução é capaz de identificar uma máquina dos anos 80 sem que um humano digite nada.
+
+Aqui está a estrutura técnica de como esse motor de IA funciona, dividida em quatro etapas principais:
+
+1. Visão Computacional e OCR (Extração de Dados)
+A IA não "olha" apenas para a máquina como um todo; ela busca pontos de dados específicos (metadados físicos).
+
+Detecção de Objetos: A IA identifica o que é o motor, o painel elétrico ou a placa de identificação (aquela chapa de metal com os dados técnicos).
+
+OCR (Reconhecimento Óptico de Caracteres) Profundo: Utiliza redes neurais para ler placas desgastadas, oxidadas ou com fontes antigas, extraindo o modelo, número de série, potência (HP/kW) e RPM.
+
+2. O "Cérebro": Redes Neurais de Similaridade
+Se a placa estiver ilegível, a IA entra em um modo de inferência por silhueta e componentes:
+
+A IA compara as dimensões físicas, o formato das carcaças e a disposição dos componentes com um banco de dados histórico.
+
+Exemplo: "Este formato de carcaça e suporte de ventilação corresponde a 95% de probabilidade de ser um motor Weg da linha produzida entre 1985 e 1992".
+
+3. Integração com Banco de Dados de Legados (O "Alimento")
+A IA se alimenta de uma base de dados técnica (via API ou banco próprio) que contém as curvas de eficiência nominais de máquinas antigas.
+
+Cruzamento de Dados: Ao identificar o modelo "X", a IA busca no banco de dados qual era o consumo padrão de energia e a emissão de CO2 estimada para aquela tecnologia na época.
+
+Cálculo da Degradação: A IA aplica um algoritmo de "fator de envelhecimento". Uma máquina de 40 anos não opera mais na eficiência de quando era nova. A IA estima essa perda de performance para calcular o "Carbono Invisível".
+
+4. Motor Prescritivo (Recomendação de Retrofit)
+Após entender quem é a máquina e o quanto ela está desperdiçando, a IA consulta uma biblioteca de Soluções de Retrofit:
+
+Se o motor tem baixa eficiência em cargas variáveis, a IA sugere um Inversor de Frequência.
+
+Se há risco de superaquecimento por atrito (carbonização interna), sugere um Sensor de Temperatura/Vibração.

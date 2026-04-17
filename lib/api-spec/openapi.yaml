@@ -1,0 +1,990 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: A²ES - AI for Energy & Sustainability API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: equipment
+    description: Industrial equipment management
+  - name: analysis
+    description: AI-powered machine analysis
+  - name: dashboard
+    description: ESG dashboard and metrics
+  - name: chat
+    description: AI expert chat
+  - name: reports
+    description: Technical and ESG reports
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /equipment:
+    get:
+      operationId: listEquipment
+      tags: [equipment]
+      summary: List all equipment
+      parameters:
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: efficiency
+          in: query
+          schema:
+            type: string
+            enum: [inefficient, average, optimized]
+        - name: sector
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of equipment
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Equipment"
+    post:
+      operationId: createEquipment
+      tags: [equipment]
+      summary: Create new equipment entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateEquipmentBody"
+      responses:
+        "201":
+          description: Equipment created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Equipment"
+
+  /equipment/{id}:
+    get:
+      operationId: getEquipment
+      tags: [equipment]
+      summary: Get equipment by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Equipment details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Equipment"
+        "404":
+          description: Not found
+    put:
+      operationId: updateEquipment
+      tags: [equipment]
+      summary: Update equipment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateEquipmentBody"
+      responses:
+        "200":
+          description: Equipment updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Equipment"
+    delete:
+      operationId: deleteEquipment
+      tags: [equipment]
+      summary: Delete equipment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /equipment/{id}/analysis:
+    get:
+      operationId: getEquipmentAnalysis
+      tags: [analysis]
+      summary: Get latest analysis for equipment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Analysis result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalysisResult"
+        "404":
+          description: No analysis found
+
+  /analysis:
+    post:
+      operationId: analyzeEquipment
+      tags: [analysis]
+      summary: Analyze equipment with AI (text/image description)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnalyzeEquipmentBody"
+      responses:
+        "200":
+          description: AI analysis result with equipment suggestions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalysisResult"
+
+  /analysis/{id}/confirm:
+    post:
+      operationId: confirmAnalysis
+      tags: [analysis]
+      summary: Confirm machine type selection and finalize analysis
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConfirmAnalysisBody"
+      responses:
+        "200":
+          description: Finalized analysis
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalysisResult"
+
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Get ESG dashboard summary
+      responses:
+        "200":
+          description: Dashboard metrics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+
+  /dashboard/esg-metrics:
+    get:
+      operationId: getEsgMetrics
+      tags: [dashboard]
+      summary: Get ESG metrics over time
+      responses:
+        "200":
+          description: ESG metrics
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EsgMetric"
+
+  /dashboard/retrofit-priorities:
+    get:
+      operationId: getRetrofitPriorities
+      tags: [dashboard]
+      summary: Get machines ranked by retrofit priority
+      responses:
+        "200":
+          description: Ranked list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RetrofitPriority"
+
+  /chat/sessions:
+    get:
+      operationId: listChatSessions
+      tags: [chat]
+      summary: List chat sessions
+      responses:
+        "200":
+          description: Sessions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ChatSession"
+    post:
+      operationId: createChatSession
+      tags: [chat]
+      summary: Create a new chat session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateChatSessionBody"
+      responses:
+        "201":
+          description: Session created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChatSession"
+
+  /chat/sessions/{id}/messages:
+    get:
+      operationId: getChatMessages
+      tags: [chat]
+      summary: Get messages for a session
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ChatMessage"
+    post:
+      operationId: sendChatMessage
+      tags: [chat]
+      summary: Send a message to AI expert (streaming SSE)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SendChatMessageBody"
+      responses:
+        "200":
+          description: SSE stream of response chunks
+          content:
+            text/event-stream:
+              schema:
+                type: string
+
+  /reports/{equipmentId}:
+    get:
+      operationId: getReport
+      tags: [reports]
+      summary: Get technical and ESG report for equipment
+      parameters:
+        - name: equipmentId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Report data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EquipmentReport"
+        "404":
+          description: No report found
+
+  /reports/{equipmentId}/generate:
+    post:
+      operationId: generateReport
+      tags: [reports]
+      summary: Generate report with AI (technical + ESG + financing)
+      parameters:
+        - name: equipmentId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Generated report
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EquipmentReport"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    Equipment:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        type:
+          type: string
+        brand:
+          type: string
+        model:
+          type: string
+        yearManufactured:
+          type: integer
+          nullable: true
+        voltage:
+          type: string
+          nullable: true
+        current:
+          type: string
+          nullable: true
+        power:
+          type: string
+          nullable: true
+        color:
+          type: string
+          nullable: true
+        size:
+          type: string
+          nullable: true
+        hoursPerDay:
+          type: number
+          nullable: true
+        daysPerWeek:
+          type: number
+          nullable: true
+        sector:
+          type: string
+          nullable: true
+        location:
+          type: string
+          nullable: true
+        operatorNotes:
+          type: string
+          nullable: true
+        apparentCondition:
+          type: string
+          nullable: true
+        noiseObserved:
+          type: boolean
+          nullable: true
+        heatingObserved:
+          type: boolean
+          nullable: true
+        vibrationObserved:
+          type: boolean
+          nullable: true
+        imageUrl:
+          type: string
+          nullable: true
+        efficiencyLevel:
+          type: string
+          nullable: true
+          enum: [inefficient, average, optimized]
+        estimatedPowerKw:
+          type: number
+          nullable: true
+        estimatedCo2MonthlyKg:
+          type: number
+          nullable: true
+        estimatedConsumptionMonthlyKwh:
+          type: number
+          nullable: true
+        retrofitStatus:
+          type: string
+          nullable: true
+          enum: [pending, in_progress, completed, not_needed]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - type
+        - brand
+        - model
+        - createdAt
+        - updatedAt
+
+    CreateEquipmentBody:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        brand:
+          type: string
+        model:
+          type: string
+        yearManufactured:
+          type: integer
+          nullable: true
+        voltage:
+          type: string
+          nullable: true
+        current:
+          type: string
+          nullable: true
+        power:
+          type: string
+          nullable: true
+        color:
+          type: string
+          nullable: true
+        size:
+          type: string
+          nullable: true
+        hoursPerDay:
+          type: number
+          nullable: true
+        daysPerWeek:
+          type: number
+          nullable: true
+        sector:
+          type: string
+          nullable: true
+        location:
+          type: string
+          nullable: true
+        operatorNotes:
+          type: string
+          nullable: true
+        apparentCondition:
+          type: string
+          nullable: true
+        noiseObserved:
+          type: boolean
+          nullable: true
+        heatingObserved:
+          type: boolean
+          nullable: true
+        vibrationObserved:
+          type: boolean
+          nullable: true
+        imageUrl:
+          type: string
+          nullable: true
+      required:
+        - name
+        - type
+        - brand
+        - model
+
+    UpdateEquipmentBody:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        brand:
+          type: string
+        model:
+          type: string
+        yearManufactured:
+          type: integer
+          nullable: true
+        voltage:
+          type: string
+          nullable: true
+        current:
+          type: string
+          nullable: true
+        power:
+          type: string
+          nullable: true
+        color:
+          type: string
+          nullable: true
+        size:
+          type: string
+          nullable: true
+        hoursPerDay:
+          type: number
+          nullable: true
+        daysPerWeek:
+          type: number
+          nullable: true
+        sector:
+          type: string
+          nullable: true
+        location:
+          type: string
+          nullable: true
+        operatorNotes:
+          type: string
+          nullable: true
+        apparentCondition:
+          type: string
+          nullable: true
+        noiseObserved:
+          type: boolean
+          nullable: true
+        heatingObserved:
+          type: boolean
+          nullable: true
+        vibrationObserved:
+          type: boolean
+          nullable: true
+        imageUrl:
+          type: string
+          nullable: true
+        efficiencyLevel:
+          type: string
+          nullable: true
+          enum: [inefficient, average, optimized]
+        retrofitStatus:
+          type: string
+          nullable: true
+          enum: [pending, in_progress, completed, not_needed]
+
+    AnalyzeEquipmentBody:
+      type: object
+      properties:
+        textDescription:
+          type: string
+          nullable: true
+        imageBase64:
+          type: string
+          nullable: true
+        imageMimeType:
+          type: string
+          nullable: true
+        equipmentData:
+          $ref: "#/components/schemas/EquipmentInputData"
+        equipmentId:
+          type: integer
+          nullable: true
+
+    EquipmentInputData:
+      type: object
+      properties:
+        type:
+          type: string
+          nullable: true
+        brand:
+          type: string
+          nullable: true
+        model:
+          type: string
+          nullable: true
+        yearManufactured:
+          type: integer
+          nullable: true
+        voltage:
+          type: string
+          nullable: true
+        current:
+          type: string
+          nullable: true
+        power:
+          type: string
+          nullable: true
+        color:
+          type: string
+          nullable: true
+        size:
+          type: string
+          nullable: true
+        hoursPerDay:
+          type: number
+          nullable: true
+        daysPerWeek:
+          type: number
+          nullable: true
+        sector:
+          type: string
+          nullable: true
+        apparentCondition:
+          type: string
+          nullable: true
+        noiseObserved:
+          type: boolean
+          nullable: true
+        heatingObserved:
+          type: boolean
+          nullable: true
+        vibrationObserved:
+          type: boolean
+          nullable: true
+        operatorNotes:
+          type: string
+          nullable: true
+
+    ConfirmAnalysisBody:
+      type: object
+      properties:
+        selectedSuggestionIndex:
+          type: integer
+      required:
+        - selectedSuggestionIndex
+
+    AnalysisResult:
+      type: object
+      properties:
+        id:
+          type: integer
+        equipmentId:
+          type: integer
+          nullable: true
+        status:
+          type: string
+          enum: [pending, suggestions, confirmed, failed]
+        machineSuggestions:
+          type: array
+          items:
+            $ref: "#/components/schemas/MachineSuggestion"
+        selectedSuggestionIndex:
+          type: integer
+          nullable: true
+        identifiedType:
+          type: string
+          nullable: true
+        identifiedBrand:
+          type: string
+          nullable: true
+        identifiedModel:
+          type: string
+          nullable: true
+        estimatedPowerKw:
+          type: number
+          nullable: true
+        estimatedConsumptionHourlyKwh:
+          type: number
+          nullable: true
+        estimatedConsumptionDailyKwh:
+          type: number
+          nullable: true
+        estimatedConsumptionMonthlyKwh:
+          type: number
+          nullable: true
+        estimatedCo2HourlyKg:
+          type: number
+          nullable: true
+        estimatedCo2MonthlyKg:
+          type: number
+          nullable: true
+        efficiencyLevel:
+          type: string
+          nullable: true
+          enum: [inefficient, average, optimized]
+        problemsFound:
+          type: array
+          items:
+            type: string
+        retrofitRecommendations:
+          type: array
+          items:
+            $ref: "#/components/schemas/RetrofitRecommendation"
+        estimatedRetrofitCostBrl:
+          type: number
+          nullable: true
+        estimatedMonthlySavingsBrl:
+          type: number
+          nullable: true
+        estimatedAnnualSavingsBrl:
+          type: number
+          nullable: true
+        estimatedRoiMonths:
+          type: number
+          nullable: true
+        estimatedConsumptionReductionPct:
+          type: number
+          nullable: true
+        estimatedCo2ReductionKgMonth:
+          type: number
+          nullable: true
+        aiSummary:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - status
+        - machineSuggestions
+        - problemsFound
+        - retrofitRecommendations
+        - createdAt
+
+    MachineSuggestion:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        confidence:
+          type: string
+          enum: [high, medium, low]
+      required:
+        - title
+        - description
+        - confidence
+
+    RetrofitRecommendation:
+      type: object
+      properties:
+        category:
+          type: string
+        item:
+          type: string
+        description:
+          type: string
+        priority:
+          type: string
+          enum: [high, medium, low]
+        estimatedCostBrl:
+          type: number
+          nullable: true
+      required:
+        - category
+        - item
+        - description
+        - priority
+
+    DashboardSummary:
+      type: object
+      properties:
+        totalEquipment:
+          type: integer
+        inefficientCount:
+          type: integer
+        averageCount:
+          type: integer
+        optimizedCount:
+          type: integer
+        totalCo2MonthlyKg:
+          type: number
+        totalConsumptionMonthlyKwh:
+          type: number
+        totalPotentialSavingsBrl:
+          type: number
+        totalCo2ReductionPotentialKg:
+          type: number
+        analyzedCount:
+          type: integer
+        pendingRetrofitCount:
+          type: integer
+      required:
+        - totalEquipment
+        - inefficientCount
+        - averageCount
+        - optimizedCount
+        - totalCo2MonthlyKg
+        - totalConsumptionMonthlyKwh
+        - totalPotentialSavingsBrl
+        - totalCo2ReductionPotentialKg
+        - analyzedCount
+        - pendingRetrofitCount
+
+    EsgMetric:
+      type: object
+      properties:
+        month:
+          type: string
+        co2Kg:
+          type: number
+        consumptionKwh:
+          type: number
+        savingsBrl:
+          type: number
+      required:
+        - month
+        - co2Kg
+        - consumptionKwh
+        - savingsBrl
+
+    RetrofitPriority:
+      type: object
+      properties:
+        equipmentId:
+          type: integer
+        name:
+          type: string
+        efficiencyLevel:
+          type: string
+        priorityScore:
+          type: number
+        estimatedSavingsBrl:
+          type: number
+        co2ReductionKg:
+          type: number
+      required:
+        - equipmentId
+        - name
+        - efficiencyLevel
+        - priorityScore
+        - estimatedSavingsBrl
+        - co2ReductionKg
+
+    ChatSession:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        equipmentId:
+          type: integer
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - title
+        - createdAt
+
+    CreateChatSessionBody:
+      type: object
+      properties:
+        title:
+          type: string
+        equipmentId:
+          type: integer
+          nullable: true
+      required:
+        - title
+
+    ChatMessage:
+      type: object
+      properties:
+        id:
+          type: integer
+        sessionId:
+          type: integer
+        role:
+          type: string
+          enum: [user, assistant]
+        content:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - sessionId
+        - role
+        - content
+        - createdAt
+
+    SendChatMessageBody:
+      type: object
+      properties:
+        content:
+          type: string
+        equipmentContext:
+          type: string
+          nullable: true
+      required:
+        - content
+
+    EquipmentReport:
+      type: object
+      properties:
+        id:
+          type: integer
+        equipmentId:
+          type: integer
+        currentSituation:
+          type: string
+        problemsIdentified:
+          type: string
+        improvementOpportunities:
+          type: string
+        retrofitSolutions:
+          type: string
+        estimatedCostsBrl:
+          type: number
+          nullable: true
+        consumptionReductionPct:
+          type: number
+          nullable: true
+        co2ReductionKgMonth:
+          type: number
+          nullable: true
+        financialGainsBrl:
+          type: number
+          nullable: true
+        sustainableImpact:
+          type: string
+          nullable: true
+        technicalJustification:
+          type: string
+          nullable: true
+        financingReadiness:
+          type: string
+          nullable: true
+        generatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - equipmentId
+        - currentSituation
+        - problemsIdentified
+        - improvementOpportunities
+        - retrofitSolutions
+        - generatedAt

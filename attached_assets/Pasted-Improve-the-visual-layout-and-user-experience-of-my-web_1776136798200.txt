@@ -1,0 +1,81 @@
+Improve the visual layout and user experience of my web app so it looks like a professional industrial decision-making tool, not just a simple calculator.
+
+The main goal is to make the interface highly visual, clear, and impactful in under 5 seconds.
+
+Focus especially on the results screen after the machine analysis.
+
+Apply the following improvements:
+
+1. Visual hierarchy (VERY IMPORTANT):
+- The most important information must be immediately visible.
+- The screen should clearly answer:
+  "Is this machine bad?" and "What should I do?"
+
+2. Create a strong top section (highlighted):
+- Show machine status with color:
+  - Red = High inefficiency
+  - Yellow = Moderate
+  - Green = Efficient
+- Display a large, bold message like:
+  "High Inefficiency"
+- Add financial loss in large text:
+  "You are losing approximately R$ X/month"
+
+3. Use card-based layout:
+- Divide the screen into clear sections using cards or boxes
+- Each card should have a clear purpose
+
+Suggested cards:
+
+CARD 1 (Main Impact – most prominent):
+- Status (inefficiency level)
+- Monthly financial loss (big font)
+
+CARD 2 (Data – secondary importance):
+- Energy consumption (kWh)
+- CO2 emissions (monthly)
+
+CARD 3 (MOST IMPORTANT – Recommendation):
+- Highlight this card strongly (bigger, colored or bordered)
+- Use direct action language:
+  "Install a frequency inverter"
+- Include:
+  - Estimated energy reduction (%)
+  - Estimated savings (R$/month)
+  - Payback time (months)
+
+CARD 4 (Extra insights):
+- Priority level (High / Medium / Low)
+- Optional: "This is one of the most inefficient machines"
+
+4. Improve readability:
+- Avoid long paragraphs
+- Use short, clear phrases
+- Use large numbers for impact
+- Make it easy to scan quickly
+
+5. Use color strategically:
+- Red for problems
+- Green for solutions
+- Yellow for attention
+- Keep a clean and professional industrial style
+
+6. Avoid a “form + result” look:
+- Make it feel like a real product dashboard
+- Add spacing, alignment, and visual balance
+
+7. Keep it simple:
+- Do not overcomplicate with too many features
+- Focus on clarity and decision-making
+
+8. Make it look like a real business tool:
+- Clean, modern UI
+- Professional tone
+- Suitable for industrial users
+
+The final design should make the user instantly understand:
+- What is wrong
+- How much money is being lost
+- What action should be taken
+
+Do not focus on perfect backend logic. Focus on UI/UX, clarity, and visual impact.
